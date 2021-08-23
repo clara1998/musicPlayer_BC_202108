@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+    <div class="wrap">
+        <!-- 播放器主体 -->
+        <div class="play_wrap" id="player">
+            <div class="search_bar">
+                <!-- 搜索歌曲 -->
+                <input type="text" autocomplete="off" v-model="query" @keyup.enter="searchMusic"
+                placeholder="输入想听的歌曲……">
+                <div class="zoom_pic">
+                    <img src="./images/zoom.png" @click="searchMusic" alt="">
+                </div>
+            </div>
+            <div class="center_con">
+                <!-- 搜索歌曲列表 -->
+                <div class="song_wrapper">
+                    <ul class="song_list">
+                        <li v-for="item in musicList">
+                            <a href="javascript:;" @click="playMusic(item.id)">
+                                <img src="./images/play.png" class="play_pic">
+                                <!-- 播放 -->
+                            </a>
+                             <b>{{ item.name }}</b> 
+                             <span v-if="item.mvid!=0" @click="playMV(item.mvid);pause()">
+                                 <img src="./images/mv_pic.png" class="mv_pic">
+                             </span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 分割线 -->
+                <div class="line_left">
+                    <img src="./images/line.png" alt="">
+                </div>
+                <!-- 歌曲信息容器 -->
+                <div class="player_con" :class="{playing:isPlaying}">
+                    <!-- 唱片上的把 -->
+                    <img src="./images/player_bar.png" class="disc_bar">
+                    <!-- 黑胶唱片 -->
+                    <img src="./images/disc.png" class="disc autoRotate">
+                    <!-- 歌曲封面 -->
+                    <!-- 这个playing属性已经在css中写好了转动的代码 -->
+                    <!-- <img :src="musicCover" :class="{playing:isPlaying}" class="cover autoRotate" alt=""> -->
+                    <img :src="musicCover==''?'./images/cover.png':musicCover" class="cover autoRotate" alt="">
+                </div>
+                <!-- 分割线 -->
+                <div class="line_right">
+                    <img src="./images/line.png" alt="">
+                </div>
+                <!-- 评论容器 -->
+                <div class="comment_wrapper">
+                    <h5 class="title">热门留言</h5>
+                    <div class="comment_list">
+                        <dl v-for="item in hotComments">
+                            <dt><img :src="item.user.avatarUrl" alt=""></dt>
+                            <dd class="name">{{ item.user.nickname }}</dd>
+                            <dd class="detail">{{ item.content }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="audio_con">
+                <audio ref="audio" @play="play"  @pause="pause" :src="musicUrl" controls autoplay loop class="myaudio"></audio>
+            </div>
+            <!-- 遮罩层用css -->
+            <div class="video_con" v-show="isShow">
+                <video ref='video' :src="mvUrl" controls="controls"></video>
+                <div class="mask" @click = "hide"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
